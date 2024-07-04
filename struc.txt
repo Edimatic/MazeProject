@@ -1,0 +1,25 @@
+MazeProject/
+├── inc/
+│   └── maze.h
+├── src/
+│   ├── main.c
+│   ├── movement.c
+│   ├── textures.c
+│   ├── close_sdl.c
+│   ├── init_sdl.c
+│   ├── process.c
+│   ├── enemy.c
+│   ├── map.c
+│   ├── rain.c
+│   ├── raycasting.c
+│   ├── rotation.c
+│   ├── weapon.c
+│   ├── ceiling_texture.png
+│   ├── floor_texture.png
+│   ├── wall_texture.png
+│   ├── enemy_texture1.png
+│   ├── weapon.png
+│   ├── enemy_texture2.png
+├── Makefile
+└── obj/
+
