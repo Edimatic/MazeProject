@@ -1,28 +1,50 @@
+# Compiler and flags
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic
-LIBS = -lSDL2 -lSDL2_image -lm
-SRCS = main.c init_sdl.c close_sdl.c map.c movement.c raycasting.c rotation.c textures.c weapon.c enemy.c rain.c
-OBJS = $(SRCS:.c=.o)
-TARGET = maze
+LDFLAGS = -lSDL2 -lSDL2_image -lm
+
+# Directories
+SRCDIR = src
+INCDIR = inc
+OBJDIR = obj
+
+# Source and object files
+SRC = $(wildcard $(SRCDIR)/*.c)
+OBJ = $(SRC:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 # List of PNG files
 PNG_FILES = wall_texture.png floor_texture.png ceiling_texture.png wall_texture_2.png \
             weapon.png enemy_texture1.png enemy_texture2.png
 
-.PHONY: all clean
+# Target
+TARGET = maze
 
+# Phony targets
+.PHONY: all clean copy_png_files
+
+# Default target
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET) $(LIBS)
+# Linking the target
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(MAKE) copy_png_files
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+# Compiling source files to object files
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -I$(INCDIR) -o $@ -c $<
 
-clean:
-	rm -f $(OBJS) $(TARGET)
+# Creating object directory if it does not exist
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
-# Target to copy PNG files to the executable directory
+# Copy PNG files to the build directory
 copy_png_files:
-	cp $(PNG_FILES) ./   # Adjust this if PNG files are in a different directory
+	@for file in $(PNG_FILES); do \
+		cp $(SRCDIR)/$$file .; \
+	done
+
+# Clean up
+clean:
+	rm -rf $(OBJDIR) $(TARGET) $(PNG_FILES)
 
